@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { Recipe } from './recipes.model';
 
 @Component({
   selector: 'app-recipes',
   templateUrl: './recipes.component.html',
   styleUrls: ['./recipes.component.css']
 })
-export class RecipesComponent implements OnInit {
+export class RecipesComponent {
+  selectedRecipe: Recipe;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  onRecipeWasSelected(recipe: Recipe) {
+    console.log(recipe);
+    this.selectedRecipe = recipe;
   }
-
 }
