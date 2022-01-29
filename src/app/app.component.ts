@@ -6,10 +6,4 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
-  view: string = 'recipe';
-
-  onViewSelected(view) {
-    this.view = view;
-  }
-}
+export class AppComponent { }
