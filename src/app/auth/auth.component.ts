@@ -48,4 +48,8 @@ export class AuthComponent {
 
 		form.reset();
 	}
+
+	onClearError() {
+		this.error = null;
+	}
 }
