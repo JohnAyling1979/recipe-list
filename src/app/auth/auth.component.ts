@@ -20,7 +20,6 @@ export class AuthComponent {
 	}
 
 	onSubmit(form: NgForm) {
-		console.log(form.value);
 		if (!form.valid) {
 			return;
 		}
@@ -38,12 +37,10 @@ export class AuthComponent {
 
 		authObs.subscribe(
 			resData => {
-				console.log('success', resData);
 				this.isLoading = false;
 				this.router.navigate(['/recipes']);
 			},
 			errorMessage => {
-				console.log('error', errorMessage);
 				this.error = errorMessage;
 				this.isLoading = false;
 			}
