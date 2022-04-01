@@ -4,6 +4,9 @@ import { Router } from "@angular/router";
 import { catchError, BehaviorSubject, tap, throwError } from "rxjs";
 import { User } from "./user.model";
 import { environment } from "../../environments/environment";
+import { Store } from "@ngrx/store";
+import { AppStore } from "../store/app.reducer";
+import * as AuthAction from "./store/auth.actions";
 
 export interface AuthResponseData {
 	idToken: string;
@@ -20,9 +23,9 @@ export class AuthService {
 	private signinUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseApiKey}`;
 	private tokenExpirationTimer: any;
 
-	user = new BehaviorSubject<User>(null);
+	// user = new BehaviorSubject<User>(null);
 
-	constructor(private http:HttpClient, private router: Router) {}
+	constructor(private http:HttpClient, private router: Router, private store: Store<AppStore>) {}
 
 	autoLogin() {
 		const userData = JSON.parse(localStorage.getItem('userData'));
@@ -39,7 +42,7 @@ export class AuthService {
 		)
 
 		if (loadedUser.token) {
-			this.user.next(loadedUser);
+			this.store.dispatch(new AuthAction.Login(loadedUser));
 
 			const expirationDuration = loadedUser.tokenExpirationDate.getTime() - new Date().getTime();
 
@@ -74,7 +77,7 @@ export class AuthService {
 	}
 
 	logout() {
-		this.user.next(null);
+		this.store.dispatch(new AuthAction.Logout);
 		localStorage.removeItem('userData');
 		this.router.navigate(['/auth']);
 
@@ -89,7 +92,7 @@ export class AuthService {
 		const expirationDate = new Date((new Date()).getTime() + +resData.expiresIn * 1000);
 		const user = new User(resData.email, resData.localId, resData.idToken, expirationDate);
 
-		this.user.next(user);
+		this.store.dispatch(new AuthAction.Login(user));
 		this.autoLogout(+resData.expiresIn * 1000);
 		localStorage.setItem('userData', JSON.stringify(user));
 	}

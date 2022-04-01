@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { Ingredient } from 'src/app/shared/ingredients.model';
-import { AppStore } from 'src/app/store/app-store';
+import { AppStore } from 'src/app/store/app.reducer';
 import * as ShoppingListActions from '../store/shopping-list.actions';
 
 @Component({
