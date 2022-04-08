@@ -19,7 +19,7 @@ export function authReducer(state: State = initialState, action: AuthActions.Aut
 			return {
 				...state,
 				loading: false,
-				user: action.payload,
+				user: action.payload.user,
 			};
 		case AuthActions.LOGOUT:
 			return {
@@ -46,6 +46,6 @@ export function authReducer(state: State = initialState, action: AuthActions.Aut
 				authError: null,
 			};
 		default:
-			return state;
+			return { ...state };
 	}
 }

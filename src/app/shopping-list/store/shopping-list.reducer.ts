@@ -5,7 +5,7 @@ export interface State {
 	ingredients: Ingredient[];
 	editedIngredient: Ingredient;
 	editedIngredientIndex: number;
-}
+};
 
 const initialState: State = {
 	ingredients: [],
@@ -55,6 +55,6 @@ export function shoppingListReducer(state: State = initialState, action: Shoppin
 				editedIngredient: null,
 			};
 		default:
-			return state;
+			return { ...state };
 	}
 }

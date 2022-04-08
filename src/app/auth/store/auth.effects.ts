@@ -22,7 +22,7 @@ const handleAuthentication = (resData) => {
 
 	localStorage.setItem('userData', JSON.stringify(user));
 
-	return new AuthActions.AuthenticateSuccess(user);
+	return new AuthActions.AuthenticateSuccess({user, redirect: true});
 };
 
 const handleError = (errorRes) => {
@@ -77,8 +77,10 @@ export class AuthEffects {
 	);
 
 	@Effect({ dispatch: false })
-	authRedirect = this.actions$.pipe(ofType(AuthActions.AUTHENTICATE_SUCCESS), tap(() => {
-		this.router.navigate(['/']);
+	authRedirect = this.actions$.pipe(ofType(AuthActions.AUTHENTICATE_SUCCESS), tap((authSuccessAction: AuthActions.AuthenticateSuccess) => {
+		if (authSuccessAction.payload.redirect) {
+			this.router.navigate(['/']);
+		}
 	}));
 
 	@Effect({ dispatch: false })
@@ -107,7 +109,7 @@ export class AuthEffects {
 			const expirationDuration = loadedUser.tokenExpirationDate.getTime() - new Date().getTime();
 			this.authService.setLogoutTimer(expirationDuration);
 
-			return new AuthActions.AuthenticateSuccess(loadedUser);
+			return new AuthActions.AuthenticateSuccess({user: loadedUser, redirect: false});
 		}
 
 		return new AuthActions.Empty;
