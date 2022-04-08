@@ -14,7 +14,6 @@ const initialState: State = {
 };
 
 export function authReducer(state: State = initialState, action: AuthActions.AuthActions) {
-	console.log('state before action', state);
 	switch (action.type) {
 		case AuthActions.AUTHENTICATE_SUCCESS:
 			return {
