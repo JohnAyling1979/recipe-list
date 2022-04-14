@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Actions, Effect, ofType } from "@ngrx/effects";
+import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 import { map, switchMap, withLatestFrom } from "rxjs";
 import { AppStore } from "src/app/store/app.reducer";
@@ -13,20 +13,21 @@ export class RecipeEffects {
 
 	constructor(private actions$: Actions, private http:HttpClient, private store: Store<AppStore>) {}
 
-	@Effect()
-	fetchRecipes = this.actions$
-		.pipe(
+	fetchRecipes = createEffect(
+		() => this.actions$.pipe(
 			ofType(RecipeActions.FETCH_RECIPES),
 			switchMap(() => this.http.get<Recipe[]>(this.apiUrl)),
 			map(recipes => recipes.map(recipe => ({...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []}))),
 			map(recipes => new RecipeActions.SetRecipes(recipes))
 		)
+	);
 
-	@Effect({dispatch:false})
-	storeRecipes = this.actions$
-		.pipe(
+	storeRecipes = createEffect(
+		() => this.actions$.pipe(
 			ofType(RecipeActions.STORE_RECIPES),
 			withLatestFrom(this.store.select('recipe')),
 			switchMap(([_actionData, recipeState]) => this.http.put(this.apiUrl, recipeState.recipes))
-		)
+		),
+		{dispatch:false}
+	);
 }
